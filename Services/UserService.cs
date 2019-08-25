@@ -36,9 +36,16 @@ public class UserService
         }
     };
 
+    private UserSqlProvider userSqlProvider;
+
+    public UserService(UserSqlProvider userSqlProvider)
+    {
+        this.userSqlProvider = userSqlProvider;
+    }
+
     public IEnumerable<User> GetUsers()
     {
-        return userList;
+        return this.userSqlProvider.GetUsers();
     }
 
     public User GetUserBySymbolNumber(long symbolNumber)

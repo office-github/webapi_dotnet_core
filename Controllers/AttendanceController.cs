@@ -12,9 +12,9 @@ namespace TodoApi.Controllers
     {
         private AttendanceService attendanceService;
 
-        public AttendanceController()
+        public AttendanceController(AttendanceService attendanceService)
         {
-            this.attendanceService = new AttendanceService();
+            this.attendanceService = attendanceService;
         }
 
         // GET api/attendance

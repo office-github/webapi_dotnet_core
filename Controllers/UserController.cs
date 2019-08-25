@@ -12,9 +12,9 @@ namespace TodoApi.Controllers
     {
         private UserService userService;
 
-        public UserController()
+        public UserController(UserService userService)
         {
-            this.userService = new UserService();
+            this.userService = userService;
         }
 
         // GET api/user
