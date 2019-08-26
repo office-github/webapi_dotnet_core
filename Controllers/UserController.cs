@@ -47,9 +47,9 @@ namespace TodoApi.Controllers
 
         // DELETE api/user/5
         [HttpDelete("{id}")]
-        public ActionResult<bool> Delete(long symbolNumber)
+        public ActionResult<bool> Delete(long id)
         {
-            return Ok(this.userService.DeleteUser(symbolNumber));
+            return Ok(this.userService.DeleteUser(id));
         }
     }
 }

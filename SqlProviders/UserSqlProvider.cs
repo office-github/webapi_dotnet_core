@@ -84,7 +84,8 @@ public class UserSqlProvider
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
-                MySqlCommand cmd = new MySqlCommand($"Insert into user values ({user.SymbolNumber}, {user.FullName}, {user.Email}, {user.PhoneNo})", conn);
+                String query = $"Insert into user values ({user.SymbolNumber}, '{user.FullName}', '{user.Email}', {user.PhoneNo})";
+                MySqlCommand cmd = new MySqlCommand(query, conn);
                 int numberOfRowAdded = cmd.ExecuteNonQuery();
 
                 if (numberOfRowAdded > 0)
@@ -105,7 +106,7 @@ public class UserSqlProvider
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
-                MySqlCommand cmd = new MySqlCommand($"UPDATE user SET fullname={user.FullName}, email={user.Email}, phoneno{user.PhoneNo} WHERE symbolnumber={user.SymbolNumber}", conn);
+                MySqlCommand cmd = new MySqlCommand($"UPDATE user SET fullname='{user.FullName}', email='{user.Email}', phoneno={user.PhoneNo} WHERE symbolnumber={user.SymbolNumber}", conn);
                 int numberOfRowUpdated = cmd.ExecuteNonQuery();
 
                 if (numberOfRowUpdated > 0)
@@ -121,20 +122,29 @@ public class UserSqlProvider
 
     public bool DeleteUser(long symbolNumber)
     {
+        MySqlTransaction transaction = null;
+
         try
         {
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
-                MySqlCommand cmd = new MySqlCommand($"delete from user WHERE symbolnumber={symbolNumber}", conn);
+                
+            using(transaction = conn.BeginTransaction()) {
+                MySqlCommand cmd = new MySqlCommand($"delete from attendance WHERE symbolnumber={symbolNumber}", conn);
                 int numberOfRowDeleted = cmd.ExecuteNonQuery();
-
-                if (numberOfRowDeleted > 0)
+                MySqlCommand cmdDelete = new MySqlCommand($"delete from user WHERE symbolnumber={symbolNumber}", conn);
+                int numberOfRow = cmdDelete.ExecuteNonQuery();
+                transaction.Commit();
+                
+                if (numberOfRowDeleted > 0 || numberOfRow > 0)
                     return true;
+            }
             }
         }
         catch (MySqlException ex)
         {
+            transaction?.Dispose();
         }
 
         return false;
