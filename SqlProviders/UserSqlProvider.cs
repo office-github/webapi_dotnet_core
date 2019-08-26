@@ -85,8 +85,10 @@ public class UserSqlProvider
             {
                 conn.Open();
                 MySqlCommand cmd = new MySqlCommand($"Insert into user values ({user.SymbolNumber}, {user.FullName}, {user.Email}, {user.PhoneNo})", conn);
-                int rowNumber = cmd.ExecuteNonQuery();
-                return true;
+                int numberOfRowAdded = cmd.ExecuteNonQuery();
+
+                if (numberOfRowAdded > 0)
+                    return true;
             }
         }
         catch (MySqlException ex)
@@ -104,8 +106,10 @@ public class UserSqlProvider
             {
                 conn.Open();
                 MySqlCommand cmd = new MySqlCommand($"UPDATE user SET fullname={user.FullName}, email={user.Email}, phoneno{user.PhoneNo} WHERE symbolnumber={user.SymbolNumber}", conn);
-                int rowNumber = cmd.ExecuteNonQuery();
-                return true;
+                int numberOfRowUpdated = cmd.ExecuteNonQuery();
+
+                if (numberOfRowUpdated > 0)
+                    return true;
             }
         }
         catch (MySqlException ex)
@@ -123,8 +127,10 @@ public class UserSqlProvider
             {
                 conn.Open();
                 MySqlCommand cmd = new MySqlCommand($"delete from user WHERE symbolnumber={symbolNumber}", conn);
-                int rowNumber = cmd.ExecuteNonQuery();
-                return true;
+                int numberOfRowDeleted = cmd.ExecuteNonQuery();
+
+                if (numberOfRowDeleted > 0)
+                    return true;
             }
         }
         catch (MySqlException ex)
