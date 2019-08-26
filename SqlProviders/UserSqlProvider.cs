@@ -20,23 +20,30 @@ public class UserSqlProvider
     {
         List<User> list = new List<User>();
 
-        using (MySqlConnection conn = GetConnection())
+        try
         {
-            conn.Open();
-            MySqlCommand cmd = new MySqlCommand("SELECT * FROM user", conn);
-            using (MySqlDataReader reader = cmd.ExecuteReader())
+            using (MySqlConnection conn = GetConnection())
             {
-                while (reader.Read())
+                conn.Open();
+                MySqlCommand cmd = new MySqlCommand("SELECT * FROM user", conn);
+                using (MySqlDataReader reader = cmd.ExecuteReader())
                 {
-                    list.Add(new User()
+                    while (reader.Read())
                     {
-                        SymbolNumber = reader.GetInt64("symbolnumber"),
-                        FullName = reader.GetString("fullname"),
-                        Email = reader.GetString("email"),
-                        PhoneNo = reader.GetInt64("phoneno")
-                    });
+                        list.Add(new User()
+                        {
+                            SymbolNumber = reader.GetInt64("symbolnumber"),
+                            FullName = reader.GetString("fullname"),
+                            Email = reader.GetString("email"),
+                            PhoneNo = reader.GetInt64("phoneno")
+                        });
+                    }
                 }
             }
+        }
+        catch (MySqlException ex)
+        {
+
         }
 
         return list;
@@ -44,26 +51,30 @@ public class UserSqlProvider
 
     public User GetUserBySymbolNumber(long symbolNumber)
     {
-        using (MySqlConnection conn = GetConnection())
+        try
         {
-            conn.Open();
-            MySqlCommand cmd = new MySqlCommand($"SELECT * FROM user where symbolnumber = {symbolNumber}", conn);
-            using (MySqlDataReader reader = cmd.ExecuteReader())
+            using (MySqlConnection conn = GetConnection())
             {
-                while (reader.Read())
+                conn.Open();
+                MySqlCommand cmd = new MySqlCommand($"SELECT * FROM user where symbolnumber = {symbolNumber}", conn);
+                using (MySqlDataReader reader = cmd.ExecuteReader())
                 {
-                    return new User()
+                    while (reader.Read())
                     {
-                        SymbolNumber = reader.GetInt64("symbolnumber"),
-                        FullName = reader.GetString("fullname"),
-                        Email = reader.GetString("email"),
-                        PhoneNo = reader.GetInt64("phoneno")
-                    };
+                        return new User()
+                        {
+                            SymbolNumber = reader.GetInt64("symbolnumber"),
+                            FullName = reader.GetString("fullname"),
+                            Email = reader.GetString("email"),
+                            PhoneNo = reader.GetInt64("phoneno")
+                        };
+                    }
                 }
             }
         }
+        catch (MySqlException ex) { }
 
-        return null;
+        return new User();
     }
 
     public bool AddUser(User user)
@@ -78,7 +89,7 @@ public class UserSqlProvider
                 return true;
             }
         }
-        catch (Exception ex)
+        catch (MySqlException ex)
         {
         }
 
@@ -97,7 +108,7 @@ public class UserSqlProvider
                 return true;
             }
         }
-        catch (Exception ex)
+        catch (MySqlException ex)
         {
         }
 
@@ -116,7 +127,7 @@ public class UserSqlProvider
                 return true;
             }
         }
-        catch (Exception ex)
+        catch (MySqlException ex)
         {
         }
 

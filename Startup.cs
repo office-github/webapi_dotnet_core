@@ -28,8 +28,9 @@ namespace TodoApi
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             //services.Add(new ServiceDescriptor(typeof(UserService), new UserService(new UserSqlProvider(Configuration.GetConnectionString("ProjectConnection")))));    
             services.AddSingleton<UserService, UserService>();
-            services.Add(new ServiceDescriptor(typeof(AttendanceService), new AttendanceService()));    
+            services.AddSingleton<AttendanceService, AttendanceService>();
             services.Add(new ServiceDescriptor(typeof(UserSqlProvider), new UserSqlProvider(Configuration.GetConnectionString("ProjectConnection"))));
+            services.Add(new ServiceDescriptor(typeof(AttendanceSqlProvider), new AttendanceSqlProvider(Configuration.GetConnectionString("ProjectConnection"))));
             services.AddCors(options =>
             {
                 options.AddPolicy("CorsPolicy",

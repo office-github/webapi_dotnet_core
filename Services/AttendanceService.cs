@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 
 public class AttendanceService
 {
@@ -31,54 +32,32 @@ public class AttendanceService
         }
     };
 
+    private AttendanceSqlProvider attendanceSqlProvider;
+
+    public AttendanceService(AttendanceSqlProvider attendanceSqlProvider)
+    {
+        this.attendanceSqlProvider = attendanceSqlProvider;
+    }
+
     public IEnumerable<Attendance> GetAttendance()
     {
-        return attendanceList;
+        try
+        {
+            return this.attendanceSqlProvider.GetAttendance();
+        }
+        catch (SqlException ex) { }
+
+        return null;
     }
 
     public IEnumerable<Attendance> GetAttendanceBySymbolNumber(long symbolNumber)
     {
-        foreach(Attendance attendance in attendanceList) {
-            if(attendance.SymbolNumber == symbolNumber) {
-                yield return attendance;
-            }
-        }
-    }
-
-    public bool AddAttendance(Attendance attendance)
-    {
         try
         {
-            attendanceList.Add(attendance);
-            return true;
+            return this.attendanceSqlProvider.SearchAttendanceBySymbolNumber(symbolNumber);
         }
-        catch (Exception ex)
-        {
-            return false;
-        }
-    }
+        catch (SqlException ex) { }
 
-    public bool UpdateAttendance(Attendance attendance)
-    {
-        try
-        {
-            return true;
-        }
-        catch (Exception ex)
-        {
-            return false;
-        }
-    }
-
-    public bool DeleteAttendance(Attendance attendance)
-    {
-        try
-        {
-            return true;
-        }
-        catch (Exception ex)
-        {
-            return false;
-        }
+        return null;
     }
 }

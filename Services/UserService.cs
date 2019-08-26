@@ -45,28 +45,35 @@ public class UserService
 
     public IEnumerable<User> GetUsers()
     {
-        return this.userSqlProvider.GetUsers();
+        IEnumerable<User> users = new List<User>();
+
+        try
+        {
+            users = this.userSqlProvider.GetUsers();
+        }
+        catch (Exception) { }
+
+        return users;
     }
 
     public User GetUserBySymbolNumber(long symbolNumber)
     {
-        foreach (User user in userList)
-        {
-            if (user.SymbolNumber == symbolNumber)
-            {
-                return user;
-            }
-        }
+        User user = new User();
 
-        return null;
+        try
+        {
+            user = this.userSqlProvider.GetUserBySymbolNumber(symbolNumber);
+        }
+        catch (Exception) { }
+
+        return user;
     }
 
     public bool AddUser(User user)
     {
         try
         {
-            userList.Add(user);
-            return true;
+            return this.userSqlProvider.AddUser(user);
         }
         catch (Exception ex)
         {
@@ -78,7 +85,7 @@ public class UserService
     {
         try
         {
-            return true;
+            return this.userSqlProvider.UpdateUser(user);
         }
         catch (Exception ex)
         {
@@ -90,7 +97,7 @@ public class UserService
     {
         try
         {
-            return true;
+            return this.userSqlProvider.DeleteUser(symbolNumber);
         }
         catch (Exception ex)
         {
