@@ -30,26 +30,5 @@ namespace TodoApi.Controllers
         {
             return Ok(this.attendanceService.GetAttendanceBySymbolNumber(id));
         }
-
-        // POST api/attendance
-        [HttpPost]
-        public ActionResult<bool> Post([FromBody] Attendance attendance)
-        {
-            return Ok(this.attendanceService.AddAttendance(attendance));
-        }
-
-        // PUT api/attendance/5
-        [HttpPut("{id}")]
-        public ActionResult<bool> Put(long id, [FromBody] Attendance attendance)
-        {
-            return Ok(this.attendanceService.UpdateAttendance(attendance));
-        }
-
-        // DELETE api/attendance/5
-        [HttpDelete("{id}")]
-        public ActionResult<bool> Delete([FromBody] Attendance attendance)
-        {
-            return Ok(this.attendanceService.DeleteAttendance(attendance));
-        }
     }
 }
