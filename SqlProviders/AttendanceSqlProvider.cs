@@ -37,6 +37,7 @@ public class AttendanceSqlProvider
                         });
                     }
                 }
+                conn.Close();
             }
         }
         catch (MySqlException ex) { }
@@ -44,7 +45,7 @@ public class AttendanceSqlProvider
         return list;
     }
 
-    public IEnumerable<Attendance> SearchAttendanceBySymbolNumber(long symbolnumber)
+    public IEnumerable<Attendance> SearchAttendanceBySymbolNumber(long symbolNumber)
     {
         List<Attendance> list = new List<Attendance>();
 
@@ -52,18 +53,27 @@ public class AttendanceSqlProvider
         {
             using (MySqlConnection conn = GetConnection())
             {
-                conn.Open();
-                MySqlCommand cmd = new MySqlCommand($"SELECT * FROM attendance where symbolnumber={symbolnumber}", conn);
-                using (MySqlDataReader reader = cmd.ExecuteReader())
+                using (MySqlCommand cmd = new MySqlCommand())
                 {
-                    while (reader.Read())
+                    conn.Open();
+                    cmd.Connection = conn;
+
+                    cmd.CommandText = "SELECT * FROM attendance WHERE symbolnumber = @symbolnumber";
+                    cmd.Prepare();
+
+                    cmd.Parameters.AddWithValue("@symbolnumber", symbolNumber);
+
+                    using (MySqlDataReader reader = cmd.ExecuteReader())
                     {
-                        list.Add(new Attendance()
+                        while (reader.Read())
                         {
-                            SymbolNumber = reader.GetInt64("symbolnumber"),
-                            AttendanceDate = reader.GetDateTime("attendancedate"),
-                            IsPresent = reader.GetBoolean("ispresent"),
-                        });
+                            list.Add(new Attendance()
+                            {
+                                SymbolNumber = reader.GetInt64("symbolnumber"),
+                                AttendanceDate = reader.GetDateTime("attendancedate"),
+                                IsPresent = reader.GetBoolean("ispresent"),
+                            });
+                        }
                     }
                 }
             }
