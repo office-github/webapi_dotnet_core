@@ -75,4 +75,26 @@ public class AttendanceSqlProvider
 
         return list;
     }
+
+    public bool DeleteAttendanceBySymbolNumber(long symbolNumber)
+    {
+        try
+        {
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                
+                MySqlCommand cmd = new MySqlCommand($"delete from attendance WHERE symbolnumber={symbolNumber}", conn);
+                int numberOfRowDeleted = cmd.ExecuteNonQuery();
+
+                if (numberOfRowDeleted > 0)
+                    return true;
+            }
+        }
+        catch (MySqlException ex)
+        {
+        }
+
+        return false;
+    }
 }
