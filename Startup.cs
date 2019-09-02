@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
@@ -10,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace TodoApi
 {
@@ -27,6 +29,7 @@ namespace TodoApi
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             //services.Add(new ServiceDescriptor(typeof(UserService), new UserService(new UserSqlProvider(Configuration.GetConnectionString("ProjectConnection")))));    
+
             services.AddSingleton<UserService, UserService>();
             services.AddSingleton<AttendanceService, AttendanceService>();
             services.Add(new ServiceDescriptor(typeof(UserSqlProvider), new UserSqlProvider(Configuration.GetConnectionString("ProjectConnection"))));
@@ -38,6 +41,10 @@ namespace TodoApi
                     .AllowAnyMethod()
                     .AllowAnyHeader()
                     .AllowCredentials());
+            });
+            services.AddSwaggerGen(c =>
+            {
+              c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
             });
         }
 
@@ -53,8 +60,30 @@ namespace TodoApi
                 app.UseHsts();
             }
 
+            // Enable middleware to serve generated Swagger as a JSON endpoint.
+            app.UseSwagger();
+
+            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
+            // specifying the Swagger JSON endpoint.
+            app.UseSwaggerUI(c =>
+            {
+              c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+            });
+
+            //app.Use(async (context, next) =>
+            //{
+            //    await next();
+
+            //    if (context.Response.StatusCode == 404 && !Path.HasExtension(context.Request.Path.Value))
+            //    {
+            //        context.Request.Path = "/index.html";
+            //        await next();
+            //    }
+            //});
+
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
             app.UseCors("CorsPolicy");
-            app.UseHttpsRedirection();
             app.UseMvc();
         }
     }
