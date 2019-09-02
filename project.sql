@@ -25,7 +25,13 @@ ALTER TABLE user MODIFY phoneno BIGINT;
 ALTER TABLE attendance MODIFY symbolnumber BIGINT;
 
 insert into user values(1111, 'Ranjan Mishra', 'rm@gmail.com', 9911882277);
+insert into user values(1112, 'Ranjan Mishra', 'rm@gmail.com', 9911882277);
+insert into user values(1113, 'Ranjan Mishra', 'rm@gmail.com', 9911882277);
+insert into user values(1114, 'Ranjan Mishra', 'rm@gmail.com', 9911882277);
 insert into attendance values(1111, now(), true);
+insert into attendance values(1112, now(), true);
+insert into attendance values(1113, now(), true);
+insert into attendance values(1114, now(), true);
 
 select * from user;
 select * from attendance;

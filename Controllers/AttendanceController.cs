@@ -30,5 +30,11 @@ namespace TodoApi.Controllers
         {
             return Ok(this.attendanceService.GetAttendanceBySymbolNumber(id));
         }
+        // DELETE api/attendance/5
+        [HttpDelete("{id}")]
+        public ActionResult<bool> Delete(long id)
+        {
+            return Ok(this.attendanceService.DeleteAttendanceBySymbolNumber(id));
+        }
     }
 }

@@ -45,7 +45,7 @@ public class AttendanceService
         {
             return this.attendanceSqlProvider.GetAttendance();
         }
-        catch (SqlException ex) { }
+        catch (Exception ex) { }
 
         return null;
     }
@@ -56,8 +56,19 @@ public class AttendanceService
         {
             return this.attendanceSqlProvider.SearchAttendanceBySymbolNumber(symbolNumber);
         }
-        catch (SqlException ex) { }
+        catch (Exception ex) { }
 
         return null;
+    }
+
+    public bool DeleteAttendanceBySymbolNumber(long symbolNumber)
+    {
+        try
+        {
+            return this.attendanceSqlProvider.DeleteAttendanceBySymbolNumber(symbolNumber);
+        }
+        catch (Exception ex) { }
+
+        return false;
     }
 }
